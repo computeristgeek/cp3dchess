@@ -1,5 +1,4 @@
 #include <GL/glut.h>
-#include <unistd.h>
 #include <cstdio>
 #include <iostream>
 #define DIV4 0.25
@@ -40,12 +39,14 @@ using namespace std;
 	#define blackMalek	29
 	#define whiteWazeer	30
 	#define blackWazeer	31
-#define PICK_TOL 1
-#define PICK_BUFFER_SIZE 256
-unsigned int PickBuffer[PICK_BUFFER_SIZE];
 
 int Board[8][8],RenderMode,charsPosition[32];
+bool flipped=false;
 
+bool whiteChar(int character)
+{
+	return ((character<=whiteAskari7 && character>=whiteAskari0)?true:((character<=blackAskari7)?false:((character<=whiteFeel1)?true:((character<=blackFeel1)?false:((character<=whiteHosan1)?true:((character<=blackHosan1)?false:((character<=whiteTabya1)?true:((character<=blackTabya1)?false:((character==whiteMalek)?true:((character<=blackMalek)?false:((character<=whiteWazeer)?true:false)))))))))));
+}
 void drawBoard(int chosen)
 {
 	if(RenderMode==GL_SELECT)
@@ -53,9 +54,6 @@ void drawBoard(int chosen)
 	{
 		int num=8*i+j+32;
 		glLoadName(num);
-		//if(chosen==num && Board[i][j]!=-1) chosen=Board[i][j];//glColor3f(0,0,1);//glBindTexture(GL_TEXTURE_2D,texture[WHITE_WOOD_C]);
-		//else if((num+i)%2==0)glColor3f(1,1,1);else glColor3f(0,0,0);//glBindTexture(GL_TEXTURE_2D,texture[BOTTOM_WOOD]);//if num%2==0 && i%2==0
-		//glDisable(GL_TEXTURE_2D);
 		glTranslatef(0.25*j,DIV32/4.0,0.25*i);
 		glBegin(GL_QUADS);
 		glVertex3f(-1,  0.125, -1);
@@ -64,7 +62,6 @@ void drawBoard(int chosen)
 		glVertex3f( -1+0.25,  0.125, -1);
 		glEnd();
 		glTranslatef(-0.25*j,-DIV32/4.0,-0.25*i);
-		//glEnable(GL_TEXTURE_2D);
 	}
 	if(RenderMode==GL_RENDER)
 	{
@@ -361,7 +358,7 @@ void drawHosan(float x, float y, float z, bool blackWhite, bool chosen)
 {
 	glBindTexture(GL_TEXTURE_2D, texture[((blackWhite)?((chosen)?WHITE_WOOD_C:WHITE_WOOD):((chosen)?BLACK_WOOD_C:BLACK_WOOD))]);
 	glTranslatef(x,y,z);		// draw in required position
-	if(blackWhite)glRotatef(180,0,1,0);
+	if(flipped ^ blackWhite)glRotatef(180,0,1,0);
 		if(RenderMode==GL_RENDER)
 		{
 			//base
@@ -428,7 +425,7 @@ void drawHosan(float x, float y, float z, bool blackWhite, bool chosen)
 		glRotatef(90,1,0,0);
 		gluCylinder(AskariCylinder,DIV16,DIV16,DIV16,64,64);
 		glRotatef(-90,1,0,0);
-	if(blackWhite)glRotatef(-180,0,1,0);
+	if(flipped ^ blackWhite)glRotatef(-180,0,1,0);
 	glTranslatef(0-x,0-y,0-z);
 
 }

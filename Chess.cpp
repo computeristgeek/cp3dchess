@@ -1,22 +1,16 @@
 #include <GL/glut.h>
-#include <unistd.h>
 #include <cstdio>
-#include "Chars.cpp"
+#include "Moves.cpp"
 #include <iostream>
 using namespace std;
+#define PICK_TOL 1
+#define PICK_BUFFER_SIZE 256
+unsigned int PickBuffer[PICK_BUFFER_SIZE];
 
-GLUquadricObj *quadratic;
-typedef struct Image Image;
-
-int angle=0;bool firstTime=true;int chosen=-1;
-float TotalAngle=0;
-
+bool firstTime=true;
+int chosen=-1;
 float Xmouse=0, Ymouse=0;
-
-bool movePiece(int pieceName, int from, int to)
-{
-	
-}
+char message[]={'\0','\0','\0','\0','\0','\0','\0','\0'};
 
 void draw()
 {
@@ -56,106 +50,94 @@ void draw()
 	}
 }
 
-void beten()
+void mouse(int button, int state, int x, int y)
 {
-	angle+=5;
-	usleep(1000000);
-	glutPostRedisplay();
-}
-
-void mousie(int button, int state, int x, int y)
-{
+	//scroll down=button3, scroll up=button4
 	if(state==GLUT_UP && (button==3 || button==4))
 	{
+		int angle;
 		if(button==3) angle=5;
 		else angle=-5;
 		glRotatef(angle,1,0,0);
-		TotalAngle+=angle;
-		angle=0;
 	}
+	//right click=button2
+	if(state==GLUT_UP && button==2)
+	{
+		glRotatef(-5,0,1,0);
+	}
+	//left click=button0
 	if(state==GLUT_UP && button==0)
 	{
 		int prevChosen=chosen;
-		bool Debug=false;
+		Xmouse=x;Ymouse=y;
 		RenderMode = GL_SELECT;
 		glRenderMode(GL_SELECT);
 		draw();
 		RenderMode=GL_RENDER;
 		int Nhits=glRenderMode(GL_RENDER);
-
-		if(Debug) fprintf(stderr,"# pick hits = %d\n",Nhits);
-		int i,index;
-		
-		for(i=0,index=0;i<Nhits;i++)
+		for(int i=0,index=0;i<Nhits;i++)
 		{
 			int nitems=PickBuffer[index++];
-			int zmin=PickBuffer[index++];
-			int zmax=PickBuffer[index++];
-			if(Debug)
-			{
-				fprintf(stderr,"Hit # %2d: found %2d items on the name stack\n",i,nitems);
-				fprintf(stderr,"\tZmin = 0x%0x, Zmax = 0x%0x\n",zmin,zmax);
-			}
+			index+=2;//skip zmin and zmax
 			for(int j=0;j<nitems;j++)
-			{
-				int item=PickBuffer[index++];
-				chosen=item;
-				if(Debug)
-				fprintf(stderr,"\t%2d: %6d\n",j,item);
-			}
+				chosen=PickBuffer[index++];
 		}
-		Xmouse=x;Ymouse=y;
-
-		RenderMode=GL_SELECT;
-		glRenderMode(GL_SELECT);
-		draw();
-		RenderMode=GL_RENDER;
-		Nhits=glRenderMode(GL_RENDER);
-
-		for(i=0,index=0;i<Nhits;i++)
+		if(chosen==prevChosen || chosen==-1)
 		{
-			int nitems=PickBuffer[index++];
-			int zmin=PickBuffer[index++];
-			int zmax=PickBuffer[index++];
-			for(int j=0;j<nitems;j++)
+			if(chosen==-1)glRotatef(5,0,1,0);
+			chosen=-1;
+		}
+		else
+		{
+			int newPosition=charsPosition[chosen],i=newPosition/8,ip=charsPosition[prevChosen]/8;
+			if(chosen>31)
 			{
-				int item=PickBuffer[index++];
-				chosen=item;
+				newPosition=chosen-32;
+				i=newPosition/8;		//chosen=8*i+j+32 in function drawBoard in Chars.cpp, by this equation, j is removed
+				//if the tiles were chosen, choose the object in that place
+				chosen=Board[i][newPosition-i*8];
+			}
+			//if the place chosen was empty and an object was chosen previously and it's allowed to move in its place, move it and change the turn
+			//if the place chosen wasn't empty, if the object chosen was chosen when it wasn't its turn and the previous object is allowed to move in its place
+			if((chosen==-1 || (chosen!=-1 && whiteChar(chosen)!=turn)) && (prevChosen<=31 && prevChosen!=-1) && (freee || movePiece(prevChosen,charsPosition[prevChosen],newPosition))) 
+			{	//charsPosition[label]=i*8+j dividing by 8 and receiving in integer, i remains, then removing i*8=j
+				Board[ip][charsPosition[prevChosen]-ip*8]=-1;
+				Board[i][newPosition-i*8]=prevChosen;
+				charsPosition[prevChosen]=newPosition;
+				turn=!turn;
 			}
 		}
-		if(chosen==prevChosen) chosen=-1;
-		Xmouse=x;Ymouse=y;
-
-		if(chosen==-1 && prevChosen==-1)
-		glRotatef(5,0,1,0);
-
-		i=(chosen-32)/8;		//chosen=8*i+j+32 in function drawBoard in Chars.cpp, by this equation, j is removed
-		int ip=charsPosition[prevChosen]/8;
-	
-		if(chosen>31 && Board[i][chosen-32-i*8]!=-1) chosen=Board[i][chosen-32-i*8];
-		else if(Board[i][chosen-32-i*8]==-1 && (prevChosen<=31 && prevChosen!=-1)) 
-		{	//charsPosition[label]=i*8+j dividing by 8 and receiving in integer, i remains, then removing i*8=j
-			Board[ip][charsPosition[prevChosen]-ip*8]=-1;
-			Board[i][chosen-32-i*8]=prevChosen;
-			charsPosition[prevChosen]=chosen-32;
-		}
-	}
-	if(state==GLUT_UP && button==2)
-	{
-		glRotatef(-5,0,1,0);
 	}
 	glutPostRedisplay();
 }
 
 void skb(int button, int x, int y)
 {
+	if(button==GLUT_KEY_UP) glRotatef(-5,1,0,0);
+	else if(button==GLUT_KEY_DOWN) glRotatef(5,1,0,0);
+	else if(button==GLUT_KEY_LEFT) glRotatef(-5,0,1,0);
+	else if(button==GLUT_KEY_RIGHT) glRotatef(5,0,1,0);
 	glutPostRedisplay();
 }
 
-int main(int argc,char** argv)
+void kb(unsigned char button, int x, int y)
 {
-	
-	glutInit(&argc, argv);  
+	if((button>='a' && button<='z') || (button>='0' && button<='9'))
+	{
+		for(int i=1;i<8;i++)
+			message[i-1]=message[i];
+		message[7]=button;
+		if(Debug)cout<<message<<endl;
+		if(fullDebugMode(message))
+		{
+			flipBoard(Board);
+			glutPostRedisplay();
+		}
+	}
+}
+
+void initialize()
+{
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowSize(640, 480);  
 	glutInitWindowPosition(300, 300);  
@@ -166,13 +148,20 @@ int main(int argc,char** argv)
 	LoadGLTextures();							// Load the textures
 	glEnable(GL_TEXTURE_2D);						// Enable texture mapping
 	RenderMode = GL_RENDER;
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);					// This Will Clear The Background Color To Black
+	glClearColor(0.91f, 0.8f, 0.4f, 0.0f);					// This Will Clear The Background Color To Black
 	glDepthFunc(GL_LESS);							// The Type Of Depth Test To Do
  	glEnable(GL_DEPTH_TEST);						// Enables Depth Testing
   	glShadeModel(GL_SMOOTH);						// Enables Smooth Color Shading
-	glutDisplayFunc(draw); glutSpecialFunc(skb);glutMouseFunc(mousie);	//glutIdleFunc(beten); 
-	glutMainLoop();  
+}
 
-  return 1;
-		
+int main(int argc,char** argv)
+{
+	glutInit(&argc, argv);  
+	initialize();
+	glutDisplayFunc(draw); 
+	glutSpecialFunc(skb);
+	glutMouseFunc(mouse);
+	glutKeyboardFunc(kb);
+	glutMainLoop();  
+	return 1;	
 }
