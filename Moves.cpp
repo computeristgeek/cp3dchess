@@ -146,14 +146,16 @@ bool inFront(int i1, int j1, int i2, int j2)
 	if(j1==j2)
 	{
 		for(int i=Min(i1,i2)+1;i<Max(i1,i2);i++)
-			if(Board[i][j1]!=-1) return true;
+		{cout<<"j1:"<<j1<<"|imin:"<<Min(i1,i2)<<"|imax:"<<Max(i1,i2)<<"|i:"<<i<<"|Board:"<<Board[i][j1]<<endl;
+			if(Board[i][j1]!=-1) return true;}
 	}
 	else
 	{
 		if(i1==i2)
 		{
-			for(int j=Min(i1,i2);j<Max(i1,i2);j++)
-				if(Board[i1][j]!=-1) return true;
+			for(int j=Min(j1,j2)+1;j<Max(j1,j2);j++)
+			{cout<<"i1:"<<i1<<"|jmin:"<<Min(j1,j2)<<"|jmax:"<<Max(j1,j2)<<"j:"<<j<<"|Board:"<<Board[i1][j]<<endl;
+				if(Board[i1][j]!=-1) return true;}
 		}
 		else if(abs(i1-i2)==abs(j1-j2))
 		{
