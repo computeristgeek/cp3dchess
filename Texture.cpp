@@ -45,8 +45,10 @@ int ImageLoad(const char *filename, Image *image)
 		return 0;
 	}
 	//printf("Height of %s: %lu\n", filename, image->sizeY);
+//	image->sizeX=image->sizeY=256;//fixes bug
 	// calculate the size (assuming 24 bpp)
 	size = image->sizeX * image->sizeY * 3;
+	//cout<<image->sizeX<<" "<<image->sizeY<<" "<<endl;
 	// read the planes
 	if ((fread(&planes, 2, 1, file)) != 1) {
 		printf("Error reading planes from %s. \n", filename);
@@ -110,6 +112,7 @@ void LoadGLTexture(const char *filename, int textNum)
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // scale linearly when image smalled than texture
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, image1->sizeX, image1->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image1->data);
+	free(image1);
 }
 
 
