@@ -1,46 +1,10 @@
 #include <GL/glut.h>
 #include <cstdio>
 #include <iostream>
-#define DIV4 0.25
-#define DIV8 0.125
-#define DIV16 0.0625
-#define DIV32 0.03125
 using namespace std;
-#include "Texture.cpp"
-	#define whiteAskari0	0
-	#define whiteAskari1	1
-	#define whiteAskari2	2
-	#define whiteAskari3	3
-	#define whiteAskari4	4
-	#define whiteAskari5	5
-	#define whiteAskari6	6
-	#define whiteAskari7	7
-	#define blackAskari0	8
-	#define blackAskari1	9
-	#define blackAskari2	10
-	#define blackAskari3	11
-	#define blackAskari4	12
-	#define blackAskari5	13
-	#define blackAskari6	14
-	#define blackAskari7	15
-	#define whiteFeel0	16
-	#define whiteFeel1	17
-	#define blackFeel0	18
-	#define blackFeel1	19
-	#define whiteHosan0	20
-	#define whiteHosan1	21
-	#define blackHosan0	22
-	#define blackHosan1	23
-	#define whiteTabya0	24
-	#define whiteTabya1	25
-	#define blackTabya0	26
-	#define blackTabya1	27
-	#define whiteMalek	28
-	#define blackMalek	29
-	#define whiteWazeer	30
-	#define blackWazeer	31
+#include "Chars.hpp"
 
-int Board[8][8],RenderMode,charsPosition[32];
+int **Board=new int*[8],*charsPosition=new int[32];
 bool flipped=false;
 
 bool whiteChar(int character)
@@ -475,6 +439,7 @@ void drawChars(bool initialize, int choice)
 	float XX=-1+0.125,YY=0.25-DIV16,ZZ=-1+0.125;
 	if(initialize)
 	{
+		for(int i=0;i<8;i++) Board[i]=new int[8];
 		Board[7][4]=whiteMalek;charsPosition[whiteMalek]=60;
 		Board[0][4]=blackMalek;charsPosition[blackMalek]=4;
 		Board[7][3]=whiteWazeer;charsPosition[whiteWazeer]=59;

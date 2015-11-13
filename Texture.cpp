@@ -1,21 +1,10 @@
 #include <GL/glut.h>
 #include <iostream>
+#include <cstdio>
+#include "Texture.hpp"
 using namespace std;
-#define max		7
-#define CHESS_BOARD	0
-#define BOTTOM_WOOD	1
-#define SIDE_WOOD	2
-#define WHITE_WOOD	3
-#define BLACK_WOOD	4
-#define WHITE_WOOD_C	5
-#define BLACK_WOOD_C	6
 
-GLuint	texture[max];		// Storage for 3 textures.
-struct Image {
-	unsigned long sizeX;
-	unsigned long sizeY;
-	char *data;
-};
+GLuint	*texture= new GLuint[max];
 
 int ImageLoad(const char *filename, Image *image)
 {

@@ -1,8 +1,9 @@
 #include <cstring>
+#include "Debug.hpp"
 
 bool Debug=false,freee=false;
 
-void flipBoard(int Board[][8])
+void flipBoard(int **Board)
 {
 	for(int i=0;i<4;i++)
 	for(int j=0;j<8;j++)

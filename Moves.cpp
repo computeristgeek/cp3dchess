@@ -1,6 +1,7 @@
-#include "Chars.cpp"
-#include "Debug.cpp"
+#include <iostream>
 #include <cmath>
+#include "Moves.hpp"
+using namespace std; //for std::abs
 
 int Max(int num1,int num2)
 {

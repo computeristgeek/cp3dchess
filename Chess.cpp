@@ -1,7 +1,7 @@
 #include <GL/glut.h>
 #include <cstdio>
-#include "Moves.cpp"
 #include <iostream>
+#include "Chess.hpp"
 using namespace std;
 #define PICK_TOL 1
 #define PICK_BUFFER_SIZE 256
@@ -12,6 +12,7 @@ int chosen=-1;
 float Xmouse=0, Ymouse=0;
 char message[]={'\0','\0','\0','\0','\0','\0','\0','\0'};
 
+int RenderMode=GL_RENDER;
 void draw()
 {
   	glMatrixMode(GL_PROJECTION);	
