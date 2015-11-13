@@ -382,7 +382,7 @@ void drawHosan(float x, float y, float z, bool blackWhite, bool chosen)
 					gluSphere(AskariSphere,DIV32/4.0,64,64);
 				glPopMatrix();
 				glPushMatrix();
-				glTranslatef(-DIV32,DIV16,DIV32+0.01);
+				glTranslatef(-DIV32,DIV32,DIV32+0.01);
 					gluSphere(AskariSphere,DIV32/4.0,64,64);
 				glPopMatrix();
 			glEnable(GL_TEXTURE_2D);
