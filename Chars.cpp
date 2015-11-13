@@ -18,6 +18,7 @@ void drawBoard(int chosen)
 	{
 		int num=8*i+j+32;
 		glLoadName(num);
+		glPushMatrix();
 		glTranslatef(0.25*j,DIV32/4.0,0.25*i);
 		glBegin(GL_QUADS);
 		glVertex3f(-1,  0.125, -1);
@@ -25,7 +26,7 @@ void drawBoard(int chosen)
 		glVertex3f(-1+0.25,  0.125,  -1+0.25);
 		glVertex3f( -1+0.25,  0.125, -1);
 		glEnd();
-		glTranslatef(-0.25*j,-DIV32/4.0,-0.25*i);
+		glPopMatrix();
 	}
 	if(RenderMode==GL_RENDER)
 	{
@@ -93,21 +94,22 @@ void drawAskari(float x, float y, float z, bool blackWhite, bool chosen)
 {
 	glBindTexture(GL_TEXTURE_2D, texture[((blackWhite)?((chosen)?WHITE_WOOD_C:WHITE_WOOD):((chosen)?BLACK_WOOD_C:BLACK_WOOD))]);
 
+	glPushMatrix();
 	glTranslatef(x,y,z);		// draw in required position
 	if(blackWhite)glRotatef(180,0,1,0);
 		if(RenderMode==GL_RENDER)
 		{
 			//base
+			glPushMatrix();
 			glTranslatef(0,-0.0625,0);
 				glRotatef(90,1,0,0);		
 					glutSolidTorus(DIV16-0.05,DIV16,64,64);
-				glRotatef(-90,1,0,0);
-			glTranslatef(0,0.0625,0);
+			glPopMatrix();
+			glPushMatrix();
 			glTranslatef(0,-0.033,0);
 				glRotatef(90,1,0,0);		
 					glutSolidTorus(DIV16-0.05,DIV16,64,64);
-				glRotatef(-90,1,0,0);
-			glTranslatef(0,0.033,0);
+			glPopMatrix();
 		}
 		//objects
 		GLUquadricObj *AskariSphere=gluNewQuadric(),*AskariCylinder=gluNewQuadric(),*AskariCone=gluNewQuadric();
@@ -115,27 +117,27 @@ void drawAskari(float x, float y, float z, bool blackWhite, bool chosen)
 		gluQuadricTexture(AskariSphere,true);gluQuadricTexture(AskariCylinder,true);gluQuadricTexture(AskariCone,true);
 		
 		//head
+		glPushMatrix();
 		glTranslatef(0,DIV8,0);
 		gluSphere(AskariSphere,DIV16-0.02,64,64);
-		glTranslatef(0,-DIV8,0);
 		//body
-		glTranslatef(0,DIV8,0);
+		glPushMatrix();
 		glRotatef(90,1,0,0);
 		gluCylinder(AskariCone,DIV32,DIV16,DIV8,64,64);
-		glRotatef(-90,1,0,0);
-		glTranslatef(0,-DIV8,0);
+		glPopMatrix();
+		glPopMatrix();
 
-
+		glPushMatrix();
 		glRotatef(90,1,0,0);
 		gluCylinder(AskariCylinder,DIV16,DIV16,DIV16,64,64);
-		glRotatef(-90,1,0,0);
-	if(blackWhite)glRotatef(-180,0,1,0);
-	glTranslatef(0-x,0-y,0-z);
+		glPopMatrix();
+	glPopMatrix();
 }
 
 void drawWazeer(float x, float y, float z, bool blackWhite, bool chosen)
 {
 	glBindTexture(GL_TEXTURE_2D, texture[((blackWhite)?((chosen)?WHITE_WOOD_C:WHITE_WOOD):((chosen)?BLACK_WOOD_C:BLACK_WOOD))]);
+	glPushMatrix();
 	glTranslatef(x,y,z);		// draw in required position
 	if(blackWhite)glRotatef(180,0,1,0);
 		GLUquadricObj *WazeerSphere=gluNewQuadric(),*WazeerCylinder=gluNewQuadric(),*WazeerCone=gluNewQuadric();
@@ -143,69 +145,77 @@ void drawWazeer(float x, float y, float z, bool blackWhite, bool chosen)
 		if(RenderMode==GL_RENDER)
 		{
 			//base
+			glPushMatrix();
 			glTranslatef(0,-0.0625,0);
 					glRotatef(90,1,0,0);		
 						glutSolidTorus(DIV16-0.1,DIV16,64,64);
-					glRotatef(-90,1,0,0);
-			glTranslatef(0,0.0625,0);
+			glPopMatrix();
+			glPushMatrix();
 			glTranslatef(0,-0.033,0);
 					glRotatef(90,1,0,0);		
 						glutSolidTorus(DIV16-0.1,DIV16,64,64);
-					glRotatef(-90,1,0,0);
-			glTranslatef(0,0.033,0);
+			glPopMatrix();
 
 			glDisable(GL_TEXTURE_2D);
+			glPushMatrix();
 			glTranslatef(0,DIV4+0.07125,0);
 				glRotatef(90,1,0,0);
+					glPushMatrix();
 					glTranslatef(0,0.04,0);
 						gluCylinder(WazeerCylinder,0,DIV32/4.0,DIV32,64,64);
-					glTranslatef(0,-0.04,0);
+					glPopMatrix();
+					glPushMatrix();
 					glTranslatef(0.04,0,0);
 						gluCylinder(WazeerCylinder,0,DIV32/4.0,DIV32,64,64);
-					glTranslatef(-0.04,0,0);
+					glPopMatrix();
+					glPushMatrix();
 					glTranslatef(0.03,0.03,0);
 						gluCylinder(WazeerCylinder,0,DIV32/4.0,DIV32,64,64);
-					glTranslatef(-0.03,-0.03,0);
+					glPopMatrix();
+					glPushMatrix();
 					glTranslatef(0,-0.04,0);
 						gluCylinder(WazeerCylinder,0,DIV32/4.0,DIV32,64,64);
-					glTranslatef(0,0.04,0);
+					glPopMatrix();
+					glPushMatrix();
 					glTranslatef(-0.04,0,0);
 						gluCylinder(WazeerCylinder,0,DIV32/4.0,DIV32,64,64);
-					glTranslatef(0.04,0,0);
+					glPopMatrix();
+					glPushMatrix();
 					glTranslatef(-0.03,-0.03,0);
 						gluCylinder(WazeerCylinder,0,DIV32/4.0,DIV32,64,64);
-					glTranslatef(0.03,0.03,0);
+					glPopMatrix();
+					glPushMatrix();
 					glTranslatef(0.03,-0.03,0);
 						gluCylinder(WazeerCylinder,0,DIV32/4.0,DIV32,64,64);
-					glTranslatef(-0.03,0.03,0);
+					glPopMatrix();
+					glPushMatrix();
 					glTranslatef(-0.03,0.03,0);
 						gluCylinder(WazeerCylinder,0,DIV32/4.0,DIV32,64,64);	
-					glTranslatef(0.03,-0.03,0);
+					glPopMatrix();
 			//glutSolidTorus(DIV32-0.001,DIV16-0.01,4,4);
-				glRotatef(-90,1,0,0);
-			glTranslatef(0,-DIV4-0.07125,0);
+			glPopMatrix();
 			glEnable(GL_TEXTURE_2D);
 		}
+		glPushMatrix();
 		glTranslatef(0,DIV4,0);
 			gluSphere(WazeerSphere,DIV16,64,64);
-		glTranslatef(0,-DIV4,0);
-
+		glPopMatrix();
+		glPushMatrix();
 		glTranslatef(0,DIV4,0);
 			glRotatef(90,1,0,0);
 				gluCylinder(WazeerCone,DIV32,DIV16,DIV4,64,64);
-			glRotatef(-90,1,0,0);
-		glTranslatef(0,-DIV4,0);
-
+		glPopMatrix();
+		glPushMatrix();
 		glRotatef(90,1,0,0);
 			gluCylinder(WazeerCylinder,DIV16,DIV16,DIV8,64,64);
-		glRotatef(-90,1,0,0);
-	if(blackWhite)glRotatef(-180,0,1,0);
-	glTranslatef(0-x,0-y,0-z);
+		glPopMatrix();
+	glPopMatrix();
 }
 
 void drawMalek(float x, float y, float z, bool blackWhite, bool chosen)
 {
 	glBindTexture(GL_TEXTURE_2D, texture[((blackWhite)?((chosen)?WHITE_WOOD_C:WHITE_WOOD):((chosen)?BLACK_WOOD_C:BLACK_WOOD))]);
+	glPushMatrix();
 	glTranslatef(x,y,z);		// draw in required position
 	if(blackWhite)glRotatef(180,0,1,0);
 		GLUquadricObj *WazeerSphere=gluNewQuadric(),*WazeerCylinder=gluNewQuadric(),*WazeerCone=gluNewQuadric();
@@ -213,225 +223,233 @@ void drawMalek(float x, float y, float z, bool blackWhite, bool chosen)
 		if(RenderMode==GL_RENDER)
 		{
 			//base
+			glPushMatrix();
 			glTranslatef(0,-0.0625,0);
 					glRotatef(90,1,0,0);		
 						glutSolidTorus(DIV8-0.1,DIV8,64,64);
-					glRotatef(-90,1,0,0);
-			glTranslatef(0,0.0625,0);
+			glPopMatrix();
+			glPushMatrix();
 			glTranslatef(0,-0.033,0);
 					glRotatef(90,1,0,0);		
 						glutSolidTorus(DIV8-0.1,DIV8,64,64);
-					glRotatef(-90,1,0,0);
-			glTranslatef(0,0.033,0);
-
+			glPopMatrix();
 			//crown spikes
 			glDisable(GL_TEXTURE_2D);
+			glPushMatrix();
 			glTranslatef(0,DIV4+0.06125,0);
 				glRotatef(90,1,0,0);
+					glPushMatrix();
 					glTranslatef(0,0.04,0);
 						gluCylinder(WazeerCylinder,DIV32/4.0,DIV32/4.0,DIV32,64,64);
-					glTranslatef(0,-0.04,0);
+					glPopMatrix();
+					glPushMatrix();
 					glTranslatef(0.04,0,0);
 						gluCylinder(WazeerCylinder,DIV32/4.0,DIV32/4.0,DIV32,64,64);
-					glTranslatef(-0.04,0,0);
+					glPopMatrix();
+					glPushMatrix();
 					glTranslatef(0.03,0.03,0);
 						gluCylinder(WazeerCylinder,DIV32/4.0,DIV32/4.0,DIV32,64,64);
-					glTranslatef(-0.03,-0.03,0);
+					glPopMatrix();
+					glPushMatrix();
 					glTranslatef(0,-0.04,0);
 						gluCylinder(WazeerCylinder,DIV32/4.0,DIV32/4.0,DIV32,64,64);
-					glTranslatef(0,0.04,0);
+					glPopMatrix();
+					glPushMatrix();
 					glTranslatef(-0.04,0,0);
 						gluCylinder(WazeerCylinder,DIV32/4.0,DIV32/4.0,DIV32,64,64);
-					glTranslatef(0.04,0,0);
+					glPopMatrix();
+					glPushMatrix();
 					glTranslatef(-0.03,-0.03,0);
 						gluCylinder(WazeerCylinder,DIV32/4.0,DIV32/4.0,DIV32,64,64);
-					glTranslatef(0.03,0.03,0);
+					glPopMatrix();
+					glPushMatrix();
 					glTranslatef(0.03,-0.03,0);
 						gluCylinder(WazeerCylinder,DIV32/4.0,DIV32/4.0,DIV32,64,64);
-					glTranslatef(-0.03,0.03,0);
+					glPopMatrix();
+					glPushMatrix();
 					glTranslatef(-0.03,0.03,0);
 						gluCylinder(WazeerCylinder,DIV32/4.0,DIV32/4.0,DIV32,64,64);	
-					glTranslatef(0.03,-0.03,0);
-				glRotatef(-90,1,0,0);
-			glTranslatef(0,-DIV4-0.06125,0);
+					glPopMatrix();
+			glPopMatrix();
 			glEnable(GL_TEXTURE_2D);
 
 		}
 
+		glPushMatrix();
 		glTranslatef(0,DIV4,0);
 			gluSphere(WazeerSphere,DIV16,64,64);
-		glTranslatef(0,-DIV4,0);
-
-		glTranslatef(0,DIV4,0);
+			glPushMatrix();
 			glRotatef(90,1,0,0);
 				gluCylinder(WazeerCone,DIV32,DIV8,DIV4,64,64);
-			glRotatef(-90,1,0,0);
-		glTranslatef(0,-DIV4,0);
+			glPopMatrix();
+		glPopMatrix();
 
+		glPushMatrix();
 		glRotatef(90,1,0,0);
 			gluCylinder(WazeerCylinder,DIV8,DIV8,DIV8,64,64);
-		glRotatef(-90,1,0,0);
-	if(blackWhite)glRotatef(-180,0,1,0);
-	glTranslatef(0-x,0-y,0-z);
+		glPopMatrix();
+	glPopMatrix();
 }
 
 
 void drawTabya(float x, float y, float z, bool blackWhite, bool chosen)
 {
 	glBindTexture(GL_TEXTURE_2D, texture[((blackWhite)?((chosen)?WHITE_WOOD_C:WHITE_WOOD):((chosen)?BLACK_WOOD_C:BLACK_WOOD))]);
+	glPushMatrix();
 	glTranslatef(x,y,z);		// draw in required position
 	if(blackWhite)glRotatef(180,0,1,0);
 		if(RenderMode==GL_RENDER)
 		{
 			//base
+			glPushMatrix();
 			glTranslatef(0,-0.0625,0);
 					glRotatef(90,1,0,0);		
 						glutSolidTorus(/*DIV16-0.05*/DIV32,DIV16,64,64);
-					glRotatef(-90,1,0,0);
-			glTranslatef(0,0.0625,0);
+			glPopMatrix();
+			glPushMatrix();
 			glTranslatef(0,-0.033,0);
 					glRotatef(90,1,0,0);		
 						glutSolidTorus(DIV16-0.05,DIV16,64,64);
-					glRotatef(-90,1,0,0);
-			glTranslatef(0,0.033,0);
+			glPopMatrix();
 		}
 		GLUquadricObj *AskariSphere=gluNewQuadric(),*AskariCylinder=gluNewQuadric(),*AskariCone=gluNewQuadric();
 		gluQuadricTexture(AskariSphere,true);gluQuadricTexture(AskariCylinder,true);gluQuadricTexture(AskariCone,true);
 
 
+		glPushMatrix();
 		glTranslatef(0,DIV8,0);
 			glRotatef(90,1,0,0);
 				gluCylinder(AskariCone,DIV16-0.01,DIV16,DIV8,64,64);
+				glPushMatrix();
 				glTranslatef(0,0,-DIV16);
 					gluDisk(AskariSphere,0,DIV16,64,64);
 					gluCylinder(AskariSphere,DIV16,DIV16,DIV16,64,64);
-				glTranslatef(0,0,DIV16);
+				glPopMatrix();
 				gluDisk(AskariSphere,0,DIV16,64,64);
-			glRotatef(-90,1,0,0);
-		glTranslatef(0,-DIV8,0);
+		glPopMatrix();
 
-
+		glPushMatrix();
 		glRotatef(90,1,0,0);
 			gluCylinder(AskariCylinder,DIV16,DIV16,DIV16,64,64);
-		glRotatef(-90,1,0,0);
-	if(blackWhite)glRotatef(-180,0,1,0);
-	glTranslatef(0-x,0-y,0-z);
+		glPopMatrix();
+	glPopMatrix();
 }
 
 void drawHosan(float x, float y, float z, bool blackWhite, bool chosen)
 {
 	glBindTexture(GL_TEXTURE_2D, texture[((blackWhite)?((chosen)?WHITE_WOOD_C:WHITE_WOOD):((chosen)?BLACK_WOOD_C:BLACK_WOOD))]);
+	glPushMatrix();
 	glTranslatef(x,y,z);		// draw in required position
 	if(flipped ^ blackWhite)glRotatef(180,0,1,0);
 		if(RenderMode==GL_RENDER)
 		{
 			//base
+			glPushMatrix();
 			glTranslatef(0,-0.0625,0);
 					glRotatef(90,1,0,0);		
 						glutSolidTorus(/*DIV16-0.05*/DIV32,DIV16,64,64);
-					glRotatef(-90,1,0,0);
-			glTranslatef(0,0.0625,0);
+			glPopMatrix();
+			glPushMatrix();
 			glTranslatef(0,-0.033,0);
 					glRotatef(90,1,0,0);		
 						glutSolidTorus(DIV16-0.05,DIV16,64,64);
-					glRotatef(-90,1,0,0);
-			glTranslatef(0,0.033,0);
+			glPopMatrix();
 		}
 
 		GLUquadricObj *AskariSphere=gluNewQuadric(),*AskariCylinder=gluNewQuadric(),*AskariCone=gluNewQuadric();
 		gluQuadricTexture(AskariSphere,true);gluQuadricTexture(AskariCylinder,true);gluQuadricTexture(AskariCone,true);
 
 	//neck
+		glPushMatrix();
 		glTranslatef(0,DIV8,0);
+			glPushMatrix();
 			glRotatef(90,1,0,0);
+				glPushMatrix();
 				glRotatef(15,0,1,0);
-
 					glTranslatef(0,0,-DIV8);
 							gluCylinder(AskariSphere,0,DIV16-0.01,DIV8,64,64);
-					glTranslatef(0,0,DIV8);
+				glPopMatrix();
+				glPushMatrix();
 				glRotatef(-15,0,1,0);
-
-				glRotatef(-15,0,1,0);
-				
 					glTranslatef(0,0,-DIV8);
 							gluCylinder(AskariSphere,0,DIV16-0.01,DIV8,64,64);
-					glTranslatef(0,0,DIV8);
-				glRotatef(15,0,1,0);
-			glRotatef(-90,1,0,0);
-
+				glPopMatrix();
+			glPopMatrix();
 			//eyes
 			glDisable(GL_TEXTURE_2D);
-						glTranslatef(DIV32,DIV32,DIV32+0.01);
-							gluSphere(AskariSphere,DIV32/4.0,64,64);
-						glTranslatef(-DIV32,-DIV16,-DIV32-0.01);
-						glTranslatef(-DIV32,DIV16,DIV32+0.01);
-							gluSphere(AskariSphere,DIV32/4.0,64,64);
-						glTranslatef(DIV32,-DIV32,-DIV32-0.01);
+				glPushMatrix();
+				glTranslatef(DIV32,DIV32,DIV32+0.01);
+					gluSphere(AskariSphere,DIV32/4.0,64,64);
+				glPopMatrix();
+				glPushMatrix();
+				glTranslatef(-DIV32,DIV16,DIV32+0.01);
+					gluSphere(AskariSphere,DIV32/4.0,64,64);
+				glPopMatrix();
 			glEnable(GL_TEXTURE_2D);
 
 			//end of mouth
+			glPushMatrix();
 			glTranslatef(0,-DIV32-0.01,DIV8-0.01);
 				gluSphere(AskariSphere,DIV32,64,64);
-			glTranslatef(0,DIV32+0.01,-DIV8+0.01);
+			glPopMatrix();
 
 			//face
+			glPushMatrix();
 			glRotatef(200,1,0,0);
 				glTranslatef(0,0,-DIV8);
 						gluCylinder(AskariSphere,DIV32,DIV16-0.01,DIV8,64,64);
-				glTranslatef(0,0,DIV8);
-			glRotatef(-200,1,0,0);
+			glPopMatrix();
 
+			glPushMatrix();
 			glRotatef(90,1,0,0);
 				gluCylinder(AskariCone,DIV16-0.01,DIV16,DIV8,64,64);
-			glRotatef(-90,1,0,0);
-		glTranslatef(0,-DIV8,0);
-
-		glRotatef(90,1,0,0);
-		gluCylinder(AskariCylinder,DIV16,DIV16,DIV16,64,64);
-		glRotatef(-90,1,0,0);
-	if(flipped ^ blackWhite)glRotatef(-180,0,1,0);
-	glTranslatef(0-x,0-y,0-z);
-
+			glPopMatrix();
+		glPopMatrix();
+		glPushMatrix();
+			glRotatef(90,1,0,0);
+				gluCylinder(AskariCylinder,DIV16,DIV16,DIV16,64,64);
+		glPopMatrix();
+	glPopMatrix();
 }
 
 void drawFeel(float x, float y, float z, bool blackWhite, bool chosen)
 {
 	glBindTexture(GL_TEXTURE_2D, texture[((blackWhite)?((chosen)?WHITE_WOOD_C:WHITE_WOOD):((chosen)?BLACK_WOOD_C:BLACK_WOOD))]);
+	glPushMatrix();
 	glTranslatef(x,y,z);		// draw in required position
 	if(blackWhite)glRotatef(180,0,1,0);
 		if(RenderMode==GL_RENDER)
 		{
 			//base
+			glPushMatrix();
 			glTranslatef(0,-0.0625,0);
 					glRotatef(90,1,0,0);		
 						glutSolidTorus(DIV16-0.1,DIV16,64,64);
-					glRotatef(-90,1,0,0);
-			glTranslatef(0,0.0625,0);
+			glPopMatrix();
+			glPushMatrix();
 			glTranslatef(0,-0.033,0);
 					glRotatef(90,1,0,0);		
 						glutSolidTorus(DIV16-0.1,DIV16,64,64);
-					glRotatef(-90,1,0,0);
-			glTranslatef(0,0.033,0);
+			glPopMatrix();
 		}
 
 		GLUquadricObj *WazeerSphere=gluNewQuadric(),*WazeerCylinder=gluNewQuadric(),*WazeerCone=gluNewQuadric();
 		gluQuadricTexture(WazeerSphere,true);gluQuadricTexture(WazeerCylinder,true);gluQuadricTexture(WazeerCone,true);
 
+		glPushMatrix();
 		glTranslatef(0,DIV4-0.02,0);
 			gluSphere(WazeerSphere,DIV16-0.02,64,64);
-		glTranslatef(0,-DIV4+0.02,0);
-
-		glTranslatef(0,DIV4-0.02,0);
+			glPushMatrix();
 			glRotatef(90,1,0,0);
 				gluCylinder(WazeerCone,DIV32,DIV16,DIV4-0.02,64,64);
-			glRotatef(-90,1,0,0);
-		glTranslatef(0,-DIV4+0.02,0);
+			glPopMatrix();
+		glPopMatrix();
 
+		glPushMatrix();
 		glRotatef(90,1,0,0);
 			gluCylinder(WazeerCylinder,DIV16,DIV16,DIV8-0.02,64,64);
-		glRotatef(-90,1,0,0);
-	if(blackWhite)glRotatef(-180,0,1,0);
-	glTranslatef(0-x,0-y,0-z);
+		glPopMatrix();
+	glPopMatrix();
 }
 
 void drawChars(bool initialize, int choice)
