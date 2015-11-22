@@ -147,7 +147,7 @@ bool inFront(int i1, int j1, int i2, int j2)
 	if(j1==j2)
 	{
 		for(int i=Min(i1,i2)+1;i<Max(i1,i2);i++)
-		{cout<<"j1:"<<j1<<"|imin:"<<Min(i1,i2)<<"|imax:"<<Max(i1,i2)<<"|i:"<<i<<"|Board:"<<Board[i][j1]<<endl;
+		{if(Debug) cout<<"j1:"<<j1<<"|imin:"<<Min(i1,i2)<<"|imax:"<<Max(i1,i2)<<"|i:"<<i<<"|Board:"<<Board[i][j1]<<endl;
 			if(Board[i][j1]!=-1) return true;}
 	}
 	else
