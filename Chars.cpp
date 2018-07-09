@@ -11,6 +11,9 @@ bool whiteChar(int character)
 {
 	return ((character<=whiteAskari7 && character>=whiteAskari0)?true:((character<=blackAskari7)?false:((character<=whiteFeel1)?true:((character<=blackFeel1)?false:((character<=whiteHosan1)?true:((character<=blackHosan1)?false:((character<=whiteTabya1)?true:((character<=blackTabya1)?false:((character==whiteMalek)?true:((character<=blackMalek)?false:((character<=whiteWazeer)?true:false)))))))))));
 }
+/*
+	This function draws the chess board
+*/
 void drawBoard(int chosen)
 {
 	if(RenderMode==GL_SELECT)
