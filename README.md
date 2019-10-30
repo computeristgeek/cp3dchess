@@ -7,3 +7,5 @@ I wrote this as a student and would love to keep it simple for other students.
 Written in OpenGL2, mainly C (with plans to make a proper C++ version).
 
 The code is very straightforward but a bit sloppy so is the documentation.
+
+There are plans to use GL3.3
